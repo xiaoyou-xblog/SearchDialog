@@ -1,6 +1,6 @@
 # SearchDialog  一款好看的安卓搜索框
 
-本项目修改自：[xiaoyou-xblog/SearchDialog (github.com)](https://github.com/xiaoyou-xblog/SearchDialog)
+本项目修改自：[wenwenwen888/SearchDialog(github.com)](https://github.com/wenwenwen888/SearchDialog)
 
 ## 效果图
 
