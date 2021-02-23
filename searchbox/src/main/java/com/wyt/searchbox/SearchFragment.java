@@ -318,7 +318,10 @@ public class SearchFragment<T> extends DialogFragment implements DialogInterface
         checkHistorySize();
     }
 
-    // 对外暴露设置链接的方法
+    /**
+     *  对外暴露链接设置
+     * @param data 链接数据
+     */
     public void setLinks(List<CustomLink<T>> data){
         // 清除历史记录并设置数据
         items.clear();

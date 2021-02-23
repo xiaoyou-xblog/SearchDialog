@@ -21,8 +21,8 @@ public interface IOnSearchClickListener<T> {
 
     /**
      *  搜索框内容改变时触发数据
-     * @param key 关键词
+     * @param keyword 搜索的关键词
      */
-    void onTextChange(String key);
+    void onTextChange(String keyword);
 
 }
