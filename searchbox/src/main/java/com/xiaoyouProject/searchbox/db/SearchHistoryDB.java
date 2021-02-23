@@ -1,4 +1,4 @@
-package com.wyt.searchbox.db;
+package com.xiaoyouProject.searchbox.db;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -6,11 +6,11 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-import com.wyt.searchbox.entity.CustomLink;
+import com.xiaoyouProject.searchbox.entity.CustomLink;
 
 import java.util.ArrayList;
 
-import static com.wyt.searchbox.adapter.SearchHistoryAdapter.ITEM_HISTORY;
+import static com.xiaoyouProject.searchbox.adapter.SearchHistoryAdapter.ITEM_HISTORY;
 
 /**
  * 数据库操作函数

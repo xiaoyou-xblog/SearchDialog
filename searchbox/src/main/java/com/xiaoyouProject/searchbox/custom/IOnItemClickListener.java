@@ -1,6 +1,6 @@
-package com.wyt.searchbox.custom;
+package com.xiaoyouProject.searchbox.custom;
 
-import com.wyt.searchbox.entity.CustomLink;
+import com.xiaoyouProject.searchbox.entity.CustomLink;
 
 /**
  * adapter的回调函数

@@ -1,4 +1,4 @@
-package com.wyt.searchbox.utils;
+package com.xiaoyouProject.searchbox.utils;
 
 import android.content.Context;
 import android.view.inputmethod.InputMethodManager;

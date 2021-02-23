@@ -1,4 +1,4 @@
-package com.wyt.searchdialog;
+package com.xiaoyouProject.searchDialog;
 
 import android.os.Bundle;
 
@@ -9,9 +9,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
 
-import com.wyt.searchbox.SearchFragment;
-import com.wyt.searchbox.custom.IOnSearchClickListener;
-import com.wyt.searchbox.entity.CustomLink;
+import com.xiaoyouProject.searchbox.SearchFragment;
+import com.xiaoyouProject.searchbox.custom.IOnSearchClickListener;
+import com.xiaoyouProject.searchbox.entity.CustomLink;
 
 import java.util.ArrayList;
 import java.util.List;

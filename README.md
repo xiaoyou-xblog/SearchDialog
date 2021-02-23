@@ -15,7 +15,7 @@
 修改内容
 -------
 
-### v2.1
+### v2.2
 
 1.适配androidx
 
@@ -27,7 +27,7 @@
 --------
 
 ```groovy
- implementation 'com.github.xiaoyou-xblog:SearchDialog:v2.1'
+ implementation 'com.github.xiaoyou-xblog:SearchDialog:v2.2'
 ```
 
 

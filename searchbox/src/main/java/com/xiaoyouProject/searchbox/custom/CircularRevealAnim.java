@@ -1,4 +1,4 @@
-package com.wyt.searchbox.custom;
+package com.xiaoyouProject.searchbox.custom;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;

@@ -1,4 +1,4 @@
-package com.wyt.searchbox;
+package com.xiaoyouProject.searchbox;
 
 import android.content.DialogInterface;
 import android.os.Bundle;
@@ -23,13 +23,13 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.wyt.searchbox.adapter.SearchHistoryAdapter;
-import com.wyt.searchbox.custom.CircularRevealAnim;
-import com.wyt.searchbox.custom.IOnItemClickListener;
-import com.wyt.searchbox.custom.IOnSearchClickListener;
-import com.wyt.searchbox.db.SearchHistoryDB;
-import com.wyt.searchbox.entity.CustomLink;
-import com.wyt.searchbox.utils.KeyBoardUtils;
+import com.xiaoyouProject.searchbox.adapter.SearchHistoryAdapter;
+import com.xiaoyouProject.searchbox.custom.CircularRevealAnim;
+import com.xiaoyouProject.searchbox.custom.IOnItemClickListener;
+import com.xiaoyouProject.searchbox.custom.IOnSearchClickListener;
+import com.xiaoyouProject.searchbox.db.SearchHistoryDB;
+import com.xiaoyouProject.searchbox.entity.CustomLink;
+import com.xiaoyouProject.searchbox.utils.KeyBoardUtils;
 
 import java.util.ArrayList;
 import java.util.List;

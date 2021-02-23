@@ -1,4 +1,4 @@
-package com.wyt.searchbox.adapter;
+package com.xiaoyouProject.searchbox.adapter;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -10,9 +10,9 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.wyt.searchbox.R;
-import com.wyt.searchbox.custom.IOnItemClickListener;
-import com.wyt.searchbox.entity.CustomLink;
+import com.xiaoyouProject.searchbox.R;
+import com.xiaoyouProject.searchbox.custom.IOnItemClickListener;
+import com.xiaoyouProject.searchbox.entity.CustomLink;
 
 import java.util.List;
 

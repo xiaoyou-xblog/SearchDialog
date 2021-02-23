@@ -1,6 +1,6 @@
-package com.wyt.searchbox.entity;
+package com.xiaoyouProject.searchbox.entity;
 
-import static com.wyt.searchbox.adapter.SearchHistoryAdapter.ITEM_LINK;
+import static com.xiaoyouProject.searchbox.adapter.SearchHistoryAdapter.ITEM_LINK;
 
 /**
  * 自定义链接,包括标题和链接
