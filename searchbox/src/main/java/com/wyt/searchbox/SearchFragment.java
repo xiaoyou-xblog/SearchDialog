@@ -2,10 +2,10 @@ package com.wyt.searchbox;
 
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.support.v4.app.DialogFragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import androidx.fragment.app.DialogFragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -28,38 +28,44 @@ import com.wyt.searchbox.custom.CircularRevealAnim;
 import com.wyt.searchbox.custom.IOnItemClickListener;
 import com.wyt.searchbox.custom.IOnSearchClickListener;
 import com.wyt.searchbox.db.SearchHistoryDB;
+import com.wyt.searchbox.entity.CustomLink;
 import com.wyt.searchbox.utils.KeyBoardUtils;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
- * Created by Won on 2017/1/13.
+ *  搜索fragment
+ * @author 小游
+ * @date 2021/02/23
  */
-
-public class SearchFragment extends DialogFragment implements DialogInterface.OnKeyListener, ViewTreeObserver.OnPreDrawListener, CircularRevealAnim.AnimListener, IOnItemClickListener, View.OnClickListener {
+public class SearchFragment<T> extends DialogFragment implements DialogInterface.OnKeyListener, ViewTreeObserver.OnPreDrawListener, CircularRevealAnim.AnimListener, IOnItemClickListener<T>, View.OnClickListener {
 
     public static final String TAG = "SearchFragment";
-    private ImageView ivSearchBack;
     private EditText etSearchKeyword;
     private ImageView ivSearchSearch;
-    private RecyclerView rvSearchHistory;
     private View searchUnderline;
-    private TextView tvSearchClean;
-    private View viewSearchOutside;
 
     private View view;
     //动画
     private CircularRevealAnim mCircularRevealAnim;
-    //历史搜索记录
-    private ArrayList<String> allHistorys = new ArrayList<>();
-    private ArrayList<String> historys = new ArrayList<>();
-    //适配器
-    private SearchHistoryAdapter searchHistoryAdapter;
-    //数据库
-    private SearchHistoryDB searchHistoryDB;
+    /**历史搜索记录*/
+    private List<CustomLink<T>> allItems = new ArrayList<>();
+    /**当前链接内容*/
+    private final List<CustomLink<T>> items = new ArrayList<>();
 
-    public static SearchFragment newInstance() {
-        return new SearchFragment();
+    /**适配器*/
+    private SearchHistoryAdapter<T> searchHistoryAdapter;
+    /**数据库*/
+    private SearchHistoryDB<T> historyDb;
+
+    /**
+     *  使用newInstance 自动创建数据
+     * @param <T> 链接数据类型
+     * @return fragment对象
+     */
+    public static <T> SearchFragment<T> newInstance() {
+        return new SearchFragment<T>();
     }
 
     @Override
@@ -84,30 +90,32 @@ public class SearchFragment extends DialogFragment implements DialogInterface.On
     }
 
     private void init() {
-        ivSearchBack = view.findViewById(R.id.iv_search_back);
+        ImageView ivSearchBack = view.findViewById(R.id.iv_search_back);
         etSearchKeyword = view.findViewById(R.id.et_search_keyword);
         ivSearchSearch = view.findViewById(R.id.iv_search_search);
-        rvSearchHistory = view.findViewById(R.id.rv_search_history);
-        searchUnderline = view.findViewById(R.id.search_underline);
-        tvSearchClean = view.findViewById(R.id.tv_search_clean);
-        viewSearchOutside = view.findViewById(R.id.view_search_outside);
+        RecyclerView rvSearchHistory = view.findViewById(R.id.rv_search_history);
+        searchUnderline = view.findViewById(R.id.search_underline2);
+        TextView tvSearchClean = view.findViewById(R.id.tv_search_clean);
+        View viewSearchOutside = view.findViewById(R.id.view_search_outside);
 
         //实例化动画效果
         mCircularRevealAnim = new CircularRevealAnim();
         //监听动画
         mCircularRevealAnim.setAnimListener(this);
-
-        getDialog().setOnKeyListener(this);//键盘按键监听
-        ivSearchSearch.getViewTreeObserver().addOnPreDrawListener(this);//绘制监听
+        //键盘按键监听
+        getDialog().setOnKeyListener(this);
+        //键盘按键监听
+        ivSearchSearch.getViewTreeObserver().addOnPreDrawListener(this);
 
         //实例化数据库
-        searchHistoryDB = new SearchHistoryDB(getContext(), SearchHistoryDB.DB_NAME, null, 1);
+        historyDb = new SearchHistoryDB<T>(getContext(), SearchHistoryDB.DB_NAME, null, 1);
 
-        allHistorys = searchHistoryDB.queryAllHistory();
+        allItems = historyDb.queryAllHistory();
         setAllHistorys();
+
         //初始化recyclerView
-        rvSearchHistory.setLayoutManager(new LinearLayoutManager(getContext()));//list类型
-        searchHistoryAdapter = new SearchHistoryAdapter(getContext(), historys);
+        rvSearchHistory.setLayoutManager(new LinearLayoutManager(getContext()));
+        searchHistoryAdapter = new SearchHistoryAdapter<>(getContext(), items);
         rvSearchHistory.setAdapter(searchHistoryAdapter);
 
         //设置删除单个记录的监听
@@ -119,7 +127,6 @@ public class SearchFragment extends DialogFragment implements DialogInterface.On
         viewSearchOutside.setOnClickListener(this);
         ivSearchSearch.setOnClickListener(this);
         tvSearchClean.setOnClickListener(this);
-
     }
 
     /**
@@ -138,8 +145,8 @@ public class SearchFragment extends DialogFragment implements DialogInterface.On
         } else if (view.getId() == R.id.iv_search_search) {
             search();
         } else if (view.getId() == R.id.tv_search_clean) {
-            searchHistoryDB.deleteAllHistory();
-            historys.clear();
+            historyDb.deleteAllHistory();
+            items.clear();
             searchUnderline.setVisibility(View.GONE);
             searchHistoryAdapter.notifyDataSetChanged();
         }
@@ -203,16 +210,10 @@ public class SearchFragment extends DialogFragment implements DialogInterface.On
      * 监听编辑框文字改变
      */
     private class TextWatcherImpl implements TextWatcher {
-
         @Override
-        public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-        }
-
+        public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) { }
         @Override
-        public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-        }
+        public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) { }
 
         @Override
         public void afterTextChanged(Editable editable) {
@@ -222,6 +223,8 @@ public class SearchFragment extends DialogFragment implements DialogInterface.On
                 searchHistoryAdapter.notifyDataSetChanged();
             } else {
                 setKeyWordHistorys(editable.toString());
+                // 触发监听事件
+                iOnSearchClickListener.onTextChange(keyword);
             }
         }
     }
@@ -231,65 +234,105 @@ public class SearchFragment extends DialogFragment implements DialogInterface.On
      */
     @Override
     public void onItemClick(String keyword) {
-        iOnSearchClickListener.OnSearchClick(keyword);
+        iOnSearchClickListener.onSearchClick(keyword);
         hideAnim();
     }
 
     /**
-     * 删除单个搜索记录
+     *  点击删除历史记录时触发
+     * @param keyword 内容
      */
     @Override
-    public void onItemDeleteClick(String keyword) {
-        searchHistoryDB.deleteHistory(keyword);
-        historys.remove(keyword);
+    public void onItemDeleteClick(CustomLink<T> keyword) {
+        historyDb.deleteHistory(keyword.getTitle());
+        items.remove(keyword);
         checkHistorySize();
         searchHistoryAdapter.notifyDataSetChanged();
     }
 
+    /**
+     *  点击链接时触发
+     * @param keyword 关键词
+     */
+    @Override
+    public void onLinkClick(T keyword) {
+        String searchKey = etSearchKeyword.getText().toString();
+        iOnSearchClickListener.onLinkClick(keyword);
+        historyDb.insertHistory(searchKey);
+        hideAnim();
+    }
+
+    /**
+     * 隐藏动画
+     */
     private void hideAnim() {
         KeyBoardUtils.closeKeyboard(getContext(), etSearchKeyword);
         mCircularRevealAnim.hide(ivSearchSearch, view);
     }
 
+    /**
+     *  点击搜索按钮
+     */
     private void search() {
         String searchKey = etSearchKeyword.getText().toString();
         if (TextUtils.isEmpty(searchKey.trim())) {
             Toast.makeText(getContext(), "请输入关键字", Toast.LENGTH_SHORT).show();
         } else {
-            iOnSearchClickListener.OnSearchClick(searchKey);//接口回调
-            searchHistoryDB.insertHistory(searchKey);//插入到数据库
+            //接口回调
+            iOnSearchClickListener.onSearchClick(searchKey);
+            //插入到数据库
+            historyDb.insertHistory(searchKey);
             hideAnim();
         }
     }
 
     private void checkHistorySize() {
-        if (historys.size() < 1) {
+        if (items.size() < 1) {
             searchUnderline.setVisibility(View.GONE);
         } else {
             searchUnderline.setVisibility(View.VISIBLE);
         }
     }
 
+    /**
+     *  设置历史记录
+     */
     private void setAllHistorys() {
-        historys.clear();
-        historys.addAll(allHistorys);
+        items.clear();
+        items.addAll(allItems);
         checkHistorySize();
     }
 
+    /**
+     *  设置关键词
+     * @param keyword 关键词
+     */
     private void setKeyWordHistorys(String keyword) {
-        historys.clear();
-        for (String string : allHistorys) {
-            if (string.contains(keyword)) {
-                historys.add(string);
+        items.clear();
+        for (CustomLink<T> item : allItems) {
+            if (item.getTitle().contains(keyword)) {
+                items.add(item);
             }
         }
         searchHistoryAdapter.notifyDataSetChanged();
         checkHistorySize();
     }
 
-    private IOnSearchClickListener iOnSearchClickListener;
+    // 对外暴露设置链接的方法
+    public void setLinks(List<CustomLink<T>> data){
+        // 清除历史记录并设置数据
+        items.clear();
+        items.addAll(data);
+        searchHistoryAdapter.notifyDataSetChanged();
+    }
 
-    public void setOnSearchClickListener(IOnSearchClickListener iOnSearchClickListener) {
+
+    /**
+     *  控件对外暴露的点击事件
+     */
+    private IOnSearchClickListener<T> iOnSearchClickListener;
+
+    public void setOnSearchClickListener(IOnSearchClickListener<T> iOnSearchClickListener) {
         this.iOnSearchClickListener = iOnSearchClickListener;
     }
 

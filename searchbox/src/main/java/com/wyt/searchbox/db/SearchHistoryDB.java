@@ -6,13 +6,18 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import com.wyt.searchbox.entity.CustomLink;
+
 import java.util.ArrayList;
 
-/**
- * Created by Won on 2017/1/13.
- */
+import static com.wyt.searchbox.adapter.SearchHistoryAdapter.ITEM_HISTORY;
 
-public class SearchHistoryDB extends SQLiteOpenHelper {
+/**
+ * 数据库操作函数
+ * @author 小游
+ * @date 2021/02/23
+ */
+public class SearchHistoryDB<T> extends SQLiteOpenHelper {
 
     public static final String DB_NAME = "SearchHistory_db";
 
@@ -39,8 +44,8 @@ public class SearchHistoryDB extends SQLiteOpenHelper {
     /**
      * 查询全部搜索记录
      */
-    public ArrayList<String> queryAllHistory() {
-        ArrayList<String> historys = new ArrayList<>();
+    public ArrayList<CustomLink<T>> queryAllHistory() {
+        ArrayList<CustomLink<T>> historys = new ArrayList<>();
         //获取数据库对象
         SQLiteDatabase db = getReadableDatabase();
         //查询表中的数据
@@ -48,7 +53,7 @@ public class SearchHistoryDB extends SQLiteOpenHelper {
         //获取name列的索引
         for (cursor.moveToFirst(); !(cursor.isAfterLast()); cursor.moveToNext()) {
             String history = cursor.getString(1);
-            historys.add(history);
+            historys.add(new CustomLink(history,null,ITEM_HISTORY));
         }
         cursor.close();//关闭结果集
         db.close();//关闭数据库对象
